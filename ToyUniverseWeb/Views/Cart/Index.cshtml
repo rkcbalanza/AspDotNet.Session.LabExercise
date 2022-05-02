@@ -14,7 +14,7 @@
 @if (cartItems.Any())
 {
     <form asp-action="Index" asp-controller="Cart" method="post">
-        <table cellpadding="2" cellspacing="2" border="1">
+        <table class="table table-striped">
             <tr>
                 <th>Id</th>
                 <th>Toy Name</th>
@@ -37,7 +37,7 @@
                 </tr>
             }
             <tr>
-                <td align="right" colspan="6">Sum</td>
+                <td align="right" colspan="6">Grand Total</td>
                 <td>
                     @{
                         List<Item> cart = Context.Session.GetObject<List<Item>>("cart");
