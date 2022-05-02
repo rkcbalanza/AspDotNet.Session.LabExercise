@@ -10,9 +10,6 @@ namespace ToyUniverseData
     {
         static void Main(string[] args)
         {
-            ConfigurationHelper configurationHelper = ConfigurationHelper.Instance();
-
-            var dbConnectionString = configurationHelper.GetProperty<string>("DbConnectionString");
 
         }
     }
