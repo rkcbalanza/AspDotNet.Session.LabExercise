@@ -1,0 +1,64 @@
+﻿@using ToyUniverseData.Models
+@using ToyUniverseWeb.Extensions
+@using Microsoft.AspNetCore.Http
+
+@{
+    ViewBag.Title = "Cart";
+    List<Item> cartItems = Context.Session.GetObject<List<Item>>("cart");
+}
+
+@model PagedResults<Item>;
+
+<h3>Cart Page</h3>
+<hr />
+@if (cartItems.Any())
+{
+    <form asp-action="Index" asp-controller="Cart" method="post">
+        <table cellpadding="2" cellspacing="2" border="1">
+            <tr>
+                <th>Id</th>
+                <th>Toy Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Sub Total</th>
+                <th>Option</th>
+            </tr>
+            @foreach (Item item in cartItems)
+            {
+                <tr>
+                    <td>@item.Toy.CToyId</td>
+                    <td>@item.Toy.VToyName</td>
+                    <td>@item.Toy.VToyDescription</td>
+                    <td>@Math.Round(item.Toy.MToyRate, 2)</td>
+                    <td>@item.Quantity</td>
+                    <td>@Math.Round((item.Toy.MToyRate * item.Quantity), 2)</td>
+                    <td><a href="@Url.Action("Remove", "Cart", new { id = item.Toy.CToyId })">Remove</a></td>
+                </tr>
+            }
+            <tr>
+                <td align="right" colspan="6">Sum</td>
+                <td>
+                    @{
+                        List<Item> cart = Context.Session.GetObject<List<Item>>("cart");
+                        var total = cart.Sum(item => item.Toy.MToyRate * item.Quantity);
+                    }
+                    @Math.Round(total, 2)
+                </td>
+            </tr>
+        </table>
+    </form>
+    <br>
+}
+else
+{
+    <h1>Cart is Empty!</h1>
+}
+<a href="@Url.Action("Index", "Toy")">Continue Shopping</a>
+<script type="text/javascript">
+    function pagerClick(index) {
+        document.getElementById("currentPageIndex").value = index;
+        document.forms[0].submit();
+    }
+</script>
+

@@ -1,0 +1,72 @@
+﻿@using ToyUniverseData.Models;
+@model PagedResults<Toy>;
+
+<h4>Toy Universe</h4>
+<hr />
+<form asp-action="Index" asp-controller="Toy" method="post">
+    <table class="table table-striped">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Toy Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity on Hand</th>
+            <th scope="col">Add to Cart</th>
+        </tr>
+        @foreach (var toy in Model.Results)
+        {
+            <tr>
+                <td scope="row">@toy.CToyId</td>
+                <td>@toy.VToyName</td>
+                <td>@toy.VToyDescription</td>
+                <td>@Math.Round(toy.MToyRate, 2)</td>
+                <td>@toy.SiToyQoh</td>
+                <td> 
+                    <a href="@Url.Action("Add", "Cart", new { id = toy.CToyId})">Buy Now</a>
+                </td>
+            </tr>
+        }
+    </table>
+    <br />
+    
+    <label for="pageSize">Item Per Page:</label>
+    <select name="pageSize" onchange="changePageSize(this)">
+        <option value="5">5</option>
+        <option value="10" selected>10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+    </select>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            @for (int pageIndex = 1; pageIndex <= Model.PageCount; pageIndex++)
+            {
+
+                @if (pageIndex != Model.CurrentPage)
+                {
+
+                    <li class="page-item"><a class="page-link" href="javascript:pagerClick(@pageIndex);">@pageIndex</a></li>
+                }
+                else
+                {
+                    <li class="page-item active">
+                        <a class="page-link" href="#">@pageIndex <span class="sr-only">(current)</span></a>
+                    </li>
+                }
+
+            }
+        </ul>
+    </nav>
+    <input type="hidden" id="currentPageIndex" name="currentPageIndex" />
+    
+</form>
+<script type="text/javascript">
+    function changePageSize(pageSize) {
+        var pageSize = pageSize.value;
+        document.forms[0].submit();
+    }
+    function pagerClick(index) {
+        document.getElementById("currentPageIndex").value = index;
+        document.forms[0].submit();
+    }
+</script>
